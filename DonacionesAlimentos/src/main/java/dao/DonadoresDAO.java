@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
 import config.ConexionDB;
@@ -14,22 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Donadores;
 
-/**
- *
- * @author marki
- */
-public class DonadoresDAO implements IDonadoresDAO{
+public class DonadoresDAO implements IDonadoresDAO {
+
     @Override
     public boolean insertar(Donadores donador) {
-        String sql = "INSERT INTO Donadores (nombre, tipo, iddireccion, telefono, correo) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Donadores (Nombre, Tipo, Telefono, Correo_Electronico, ID_Direccion) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = ConexionDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, donador.getNombre());
             ps.setString(2, donador.getTipo());
-            ps.setInt(3, donador.getIdDireccion());
-            ps.setString(4, donador.getTelefono());
-            ps.setString(5, donador.getCorreo());
+            ps.setString(3, donador.getTelefono());
+            ps.setString(4, donador.getCorreo());
+            ps.setInt(5, donador.getIdDireccion());
 
             return ps.executeUpdate() > 0;
 
@@ -41,7 +34,7 @@ public class DonadoresDAO implements IDonadoresDAO{
 
     @Override
     public Donadores obtenerPorID(int idDonador) {
-        String sql = "SELECT ID_Donador, Nombre, Tipo, ID_Direccion, Telefono, Correo_Electronico FROM Donadores WHERE idDonador = ?";
+        String sql = "SELECT ID_Donador, Nombre, Tipo, Telefono, Correo_Electronico, ID_Direccion FROM Donadores WHERE ID_Donador = ?";
         Donadores donador = null;
 
         try (Connection conn = ConexionDB.getConnection();
@@ -51,14 +44,7 @@ public class DonadoresDAO implements IDonadoresDAO{
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                donador = new Donadores();
-                donador.setIdDonador(rs.getInt("idDonador"));
-                donador.setNombre(rs.getString("nombre"));
-                donador.setTipo(rs.getString("tipo"));
-                donador.setIdDireccion(rs.getInt("idDireccion"));
-                donador.setTelefono(rs.getString("telefono"));
-                donador.setCorreo("correo");
-                
+                donador = mapearDonador(rs);
             }
 
         } catch (SQLException e) {
@@ -69,7 +55,7 @@ public class DonadoresDAO implements IDonadoresDAO{
 
     @Override
     public List<Donadores> obtenerTodos() {
-        String sql = "SELECT ID_Donador, Nombre, Tipo, ID_Direccion, Telefono, Correo_Electronico FROM Donadores";
+        String sql = "SELECT ID_Donador, Nombre, Tipo, Telefono, Correo_Electronico, ID_Direccion FROM Donadores";
         List<Donadores> lista = new ArrayList<>();
 
         try (Connection conn = ConexionDB.getConnection();
@@ -77,13 +63,7 @@ public class DonadoresDAO implements IDonadoresDAO{
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                Donadores donador = new Donadores();
-                donador.setIdDonador(rs.getInt("idDonador"));
-                donador.setNombre(rs.getString("nombre"));
-                donador.setTipo(rs.getString("tipo"));
-                donador.setIdDireccion(rs.getInt("idDireccion"));
-                donador.setTelefono(rs.getString("telefono"));
-                donador.setCorreo(rs.getString("correo"));
+                lista.add(mapearDonador(rs));
             }
 
         } catch (SQLException e) {
@@ -94,15 +74,16 @@ public class DonadoresDAO implements IDonadoresDAO{
 
     @Override
     public boolean actualizar(Donadores donador) {
-        String sql = "UPDATE Donadores SET nombre = ?, tipo = ? , ID_Direccion = ? , telefono = ?, Correo_Electronico = ? WHERE idDonador = ?";
+        String sql = "UPDATE Donadores SET Nombre = ?, Tipo = ?, Telefono = ?, Correo_Electronico = ?, ID_Direccion = ? WHERE ID_Donador = ?";
         try (Connection conn = ConexionDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, donador.getNombre());
             ps.setString(2, donador.getTipo());
-            ps.setInt(3, donador.getIdDireccion());
-            ps.setString(4, donador.getTelefono());
-            ps.setString(5, donador.getCorreo());
+            ps.setString(3, donador.getTelefono());
+            ps.setString(4, donador.getCorreo());
+            ps.setInt(5, donador.getIdDireccion());
+            ps.setInt(6, donador.getIdDonador());
 
             return ps.executeUpdate() > 0;
 
@@ -114,7 +95,7 @@ public class DonadoresDAO implements IDonadoresDAO{
 
     @Override
     public boolean eliminar(int idDonador) {
-        String sql = "DELETE FROM Donadores WHERE idDonador = ?";
+        String sql = "DELETE FROM Donadores WHERE ID_Donador = ?";
         try (Connection conn = ConexionDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -126,5 +107,15 @@ public class DonadoresDAO implements IDonadoresDAO{
             return false;
         }
     }
-    
+
+    private Donadores mapearDonador(ResultSet rs) throws SQLException {
+        Donadores d = new Donadores();
+        d.setIdDonador(rs.getInt("ID_Donador"));
+        d.setNombre(rs.getString("Nombre"));
+        d.setTipo(rs.getString("Tipo"));
+        d.setTelefono(rs.getString("Telefono"));
+        d.setCorreo(rs.getString("Correo_Electronico"));
+        d.setIdDireccion(rs.getInt("ID_Direccion"));
+        return d;
+    }
 }

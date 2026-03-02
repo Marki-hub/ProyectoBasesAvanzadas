@@ -19,7 +19,7 @@ import model.Entregas;
  */
 public class EntregasController {
     private final IEntregasDAO entregasDAO;
-    private final List<String> estadosValido = Arrays.asList("pendiente", "en transito", "completada", "cancelada");
+    private final List<String> estadosValido = Arrays.asList("pendiente", "en tránsito", "completada", "cancelada");
     
     public EntregasController(){
         this.entregasDAO= new EntregasDAO();
