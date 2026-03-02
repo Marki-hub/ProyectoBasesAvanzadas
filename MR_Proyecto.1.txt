@@ -1,0 +1,46 @@
+﻿Donadores(
+ID_Donador INT, PK, Auto_increment,
+Nombre VARCHAR,
+Tipo VARCHAR,
+Telefono VARCHAR,
+Correo_Electronico VARCHAR,
+ID_Direccion INT, FK)
+
+
+Alimentos ( 
+ID_Alimento INT, PK, Auto_increment, 
+Nombre VARCHAR, 
+Categoria VARCHAR, 
+Fecha_Caducidad DATE, 
+Cantidad INT,
+ID_Donador INT, FK) 
+
+
+Organizaciones ( 
+ID_Organizacion INT, PK, Auto_increment, 
+Nombre VARCHAR, 
+Nombre_Responsable VARCHAR, 
+Apellido_Paterno_Responsable VARCHAR, 
+Apellido_Materno_Responsable VARCHAR, 
+Telefono VARCHAR, 
+Correo VARCHAR,
+ID_Direccion INT, FK) 
+
+
+
+
+Entregas ( 
+ID_Entrega INT, PK, Auto_increment, 
+Fecha_Entrega DATETIME, 
+Estado VARCHAR, 
+ID_Organizacion INT, FK,
+ID_Alimento INT, FK)
+
+
+
+
+Direcciones(
+ID_Direccion INT, PK, Auto_increment,
+Calle VARCHAR,
+Numero VARCHAR,
+Colonia VARCHAR)
